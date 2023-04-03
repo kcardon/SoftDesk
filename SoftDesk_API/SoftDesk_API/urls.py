@@ -1,14 +1,19 @@
 from rest_framework import routers
 from django.urls import include, path
 from django.contrib import admin
-
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from api.views import (
-    UserAPIView,
     ProjectAPIView,
-    ContributorAPIView,
-    IssueAPIView,
+    ProjectUsersAPIView,
+    ProjectIssuesAPIView,
     CommentAPIView,
 )
+from authentication.views import (
+    UserAPIView,
+    SignupAPIView,
+    LoginAPIView,
+)
+
 
 """SoftDesk_API URL Configuration
 
@@ -25,17 +30,38 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-# Création du routeur
-router = routers.SimpleRouter()
-# Déclaration des urls du routeur
-router.register("users", UserAPIView, basename="users")
-router.register("projects", ProjectAPIView, basename="projects")
-router.register("contributors", ContributorAPIView, basename="contributors")
-router.register("issues", IssueAPIView, basename="issues")
-router.register("comments", CommentAPIView, basename="comments")
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("api-auth/", include("rest_framework.urls")),
-    path("api/", include(router.urls)),
+    path("api/token/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
+    path("api/token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
+    # path("api/", include(router.urls)),
+    path(
+        "api/login/", LoginAPIView.as_view(), name="login"
+    ),  # Ajoutez cette ligne pour le Login
+]
+
+# Création du routeur
+router_root = routers.DefaultRouter()
+# Déclaration des urls du routeur
+
+router_root.register("signup", SignupAPIView, basename="users")
+router_root.register("user", UserAPIView, basename="user")
+router_root.register("projects", ProjectAPIView, basename="projects")
+
+router_project = routers.DefaultRouter()
+router_project.register("users", ProjectUsersAPIView, basename="projet_users")
+router_project.register("issues", ProjectIssuesAPIView, basename="projet_users")
+
+router_issue = routers.DefaultRouter()
+router_issue.register("comments", CommentAPIView, basename="comments")
+
+urlpatterns += [path("api/", include(router_root.urls))]
+urlpatterns += [path("api/projects/<int:project_id>/", include(router_project.urls))]
+urlpatterns += [
+    path(
+        "api/projects/<int:project_id>/issues/<int:issue_id>/",
+        include(router_issue.urls),
+    )
 ]

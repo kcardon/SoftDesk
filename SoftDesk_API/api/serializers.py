@@ -1,5 +1,14 @@
-from rest_framework.serializers import ModelSerializer
+from rest_framework.serializers import (
+    Serializer,
+    ModelSerializer,
+    ValidationError,
+    EmailField,
+    CharField,
+    PrimaryKeyRelatedField,
+)
+from django.contrib.auth import authenticate
 from .models import User, Project, Contributor, Issue, Comment
+import logging
 
 
 class UserSerializer(ModelSerializer):
@@ -9,7 +18,7 @@ class UserSerializer(ModelSerializer):
 
 
 class ProjectSerializer(ModelSerializer):
-    author_user_id = UserSerializer()
+    author_user_id = PrimaryKeyRelatedField(queryset=User.objects.all())
 
     class Meta:
         model = Project
@@ -17,8 +26,8 @@ class ProjectSerializer(ModelSerializer):
 
 
 class ContributorSerializer(ModelSerializer):
-    user = UserSerializer()
-    project = ProjectSerializer()
+    user = PrimaryKeyRelatedField(queryset=User.objects.all())
+    project = PrimaryKeyRelatedField(queryset=Project.objects.all())
 
     class Meta:
         model = Contributor
@@ -26,8 +35,9 @@ class ContributorSerializer(ModelSerializer):
 
 
 class IssueSerializer(ModelSerializer):
-    user = UserSerializer()
-    assignee_user = UserSerializer()
+    author_user = PrimaryKeyRelatedField(queryset=User.objects.all())
+    assignee_user = PrimaryKeyRelatedField(queryset=User.objects.all())
+    project = PrimaryKeyRelatedField(queryset=Project.objects.all())
 
     class Meta:
         model = Issue
@@ -39,14 +49,14 @@ class IssueSerializer(ModelSerializer):
             "priority",
             "project",
             "status",
-            "user",
+            "author_user",
             "assignee_user",
             "created_time",
         ]
 
 
 class CommentSerializer(ModelSerializer):
-    author_user = UserSerializer()
+    author_user = PrimaryKeyRelatedField(queryset=User.objects.all())
 
     class Meta:
         model = Comment

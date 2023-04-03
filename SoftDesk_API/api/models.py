@@ -1,14 +1,8 @@
 from django.db import models
-from django.contrib.auth.models import AbstractUser, Group, Permission
 from django.conf import settings
-
+from authentication.models import User
 
 # Create your models here.
-class User(AbstractUser):
-    groups = models.ManyToManyField(Group, related_name="users_in_group")
-    user_permissions = models.ManyToManyField(
-        Permission, related_name="users_with_permission"
-    )
 
 
 class Project(models.Model):
@@ -40,7 +34,7 @@ class Issue(models.Model):
     priority = models.CharField(max_length=128)
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     status = models.CharField(max_length=128)
-    user = models.ForeignKey(
+    author_user = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name="issues_created"
     )
     assignee_user = models.ForeignKey(

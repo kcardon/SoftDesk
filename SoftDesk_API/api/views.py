@@ -5,6 +5,8 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
+from rest_framework.permissions import AllowAny
+
 from .models import User, Project, Contributor, Issue, Comment
 from .serializers import (
     UserSerializer,
@@ -13,6 +15,11 @@ from .serializers import (
     IssueSerializer,
     CommentSerializer,
 )
+from rest_framework.permissions import AllowAny, IsAuthenticated
+
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class UserAPIView(ModelViewSet):
@@ -31,53 +38,36 @@ class UserAPIView(ModelViewSet):
 
 class ProjectAPIView(ModelViewSet):
     serializer_class = ProjectSerializer
+    permission_classes = (IsAuthenticated,)
 
-    def get_queryset():
+    def get_queryset(self):
         return Project.objects.all()
 
 
-"""     def post(self, request):
-        serializer = ProjectSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST) """
-
-
-class ContributorAPIView(ModelViewSet):
+class ProjectUsersAPIView(ModelViewSet):
     serializer_class = ContributorSerializer
+    permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
-        return Contributor.objects.all()
+        project_id = self.kwargs["project_id"]
+        return Contributor.objects.filter(project_id=project_id)
 
 
-"""     def post(self, request):
-        serializer = ContributorSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST) """
-
-
-class IssueAPIView(ModelViewSet):
+class ProjectIssuesAPIView(ModelViewSet):
     serializer_class = IssueSerializer
+    permission_classes = (IsAuthenticated,)
 
-    def get_queryset():
-        Issue.objects.all()
-
-
-"""     def post(self, request):
-        serializer = IssueSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST) """
+    def get_queryset(self):
+        project_id = self.kwargs["project_id"]
+        return Issue.objects.filter(project_id=project_id)
 
 
 class CommentAPIView(ModelViewSet):
     serializer_class = CommentSerializer
 
-    def get_queryset():
+    def get_queryset(self):
+        project_id = self.kwargs["project_id"]
+        issue_id = self.kwargs["issue_id"]
         return Comment.objects.all()
 
 
