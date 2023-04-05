@@ -14,8 +14,8 @@ logger = logging.getLogger(__name__)
 
 class UserSerializer(ModelSerializer):
     class Meta:
-        model = get_user_model()
-        fields = "__all__"
+        model = User
+        fields = ["id", "username", "email", "first_name", "last_name"]
 
 
 class SignUpSerializer(ModelSerializer):
@@ -40,20 +40,20 @@ class SignUpSerializer(ModelSerializer):
         return user
 
 
-class LoginSerializer(Serializer):
-    email = EmailField()
-    password = CharField(write_only=True)
+# class LoginSerializer(Serializer):
+#     email = EmailField()
+#     password = CharField(write_only=True)
 
-    def validate(self, data):
-        email = data.get("email")
-        password = data.get("password")
-        logger.debug(f"Email: {email}")
-        logger.debug(f"Password: {password}")
-        user = authenticate(email=email, password=password)
-        logger.debug(f"Authenticated user: {user}")
+#     def validate(self, data):
+#         email = data.get("email")
+#         password = data.get("password")
+#         logger.debug(f"Email: {email}")
+#         logger.debug(f"Password: {password}")
+#         user = authenticate(email=email, password=password)
+#         logger.debug(f"Authenticated user: {user}")
 
-        if user is None:
-            raise ValidationError("A user with this email and password is not found.")
+#         if user is None:
+#             raise ValidationError("A user with this email and password is not found.")
 
-        data["user"] = user
-        return data
+#         data["user"] = user
+#         return data

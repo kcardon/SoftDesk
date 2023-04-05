@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 
 # Create your views here.
 from rest_framework import status
@@ -7,6 +7,7 @@ from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import AllowAny
 
+from .permissions import IsContributor
 from .models import User, Project, Contributor, Issue, Comment
 from .serializers import (
     UserSerializer,
@@ -16,10 +17,6 @@ from .serializers import (
     CommentSerializer,
 )
 from rest_framework.permissions import AllowAny, IsAuthenticated
-
-import logging
-
-logger = logging.getLogger(__name__)
 
 
 class UserAPIView(ModelViewSet):
@@ -38,15 +35,20 @@ class UserAPIView(ModelViewSet):
 
 class ProjectAPIView(ModelViewSet):
     serializer_class = ProjectSerializer
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (IsContributor,)
 
     def get_queryset(self):
         return Project.objects.all()
 
+    def get_object(self):
+        obj = get_object_or_404(self.get_queryset(), pk=self.kwargs["pk"])
+        self.check_object_permissions(self.request, obj)
+        return obj
+
 
 class ProjectUsersAPIView(ModelViewSet):
     serializer_class = ContributorSerializer
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (IsContributor,)
 
     def get_queryset(self):
         project_id = self.kwargs["project_id"]
@@ -55,7 +57,7 @@ class ProjectUsersAPIView(ModelViewSet):
 
 class ProjectIssuesAPIView(ModelViewSet):
     serializer_class = IssueSerializer
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (IsContributor,)
 
     def get_queryset(self):
         project_id = self.kwargs["project_id"]
@@ -64,6 +66,7 @@ class ProjectIssuesAPIView(ModelViewSet):
 
 class CommentAPIView(ModelViewSet):
     serializer_class = CommentSerializer
+    permission_classes = (IsContributor,)
 
     def get_queryset(self):
         project_id = self.kwargs["project_id"]

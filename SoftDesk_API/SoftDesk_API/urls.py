@@ -2,6 +2,7 @@ from rest_framework import routers
 from django.urls import include, path
 from django.contrib import admin
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+
 from api.views import (
     ProjectAPIView,
     ProjectUsersAPIView,
@@ -11,7 +12,7 @@ from api.views import (
 from authentication.views import (
     UserAPIView,
     SignupAPIView,
-    LoginAPIView,
+    # LoginAPIView,
 )
 
 
@@ -37,9 +38,9 @@ urlpatterns = [
     path("api/token/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
     path("api/token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
     # path("api/", include(router.urls)),
-    path(
-        "api/login/", LoginAPIView.as_view(), name="login"
-    ),  # Ajoutez cette ligne pour le Login
+    # path(
+    #    "api/login/", LoginAPIView.as_view(), name="login"
+    # ),  # Ajoutez cette ligne pour le Login
 ]
 
 # Création du routeur

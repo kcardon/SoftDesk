@@ -1,6 +1,9 @@
 from django.shortcuts import render
 from django.contrib.auth import get_user_model
 
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
+
 # Create your views here.
 from rest_framework import status, viewsets
 from rest_framework.response import Response
@@ -12,7 +15,7 @@ from .models import User
 from .serializers import (
     UserSerializer,
     SignUpSerializer,
-    LoginSerializer,
+    # LoginSerializer,
 )
 
 import logging
@@ -42,18 +45,16 @@ class SignupAPIView(ModelViewSet):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class LoginAPIView(APIView):
-    serializer_class = LoginSerializer
-    permission_classes = (AllowAny,)
+# class LoginAPIView(APIView):
+#     serializer_class = LoginSerializer
+#     permission_classes = (AllowAny,)
 
-    def post(self, request):
-        serializer = self.serializer_class(data=request.data)
-        if serializer.is_valid():
-            user = serializer.validated_data["user"]
-            # À ce stade, vous pouvez générer un token JWT, un token DRF ou utiliser une autre méthode d'authentification.
-            # Ici, nous renvoyons simplement l'email de l'utilisateur comme exemple.
-            return Response({"email": user.email}, status=status.HTTP_200_OK)
-        logger.error(
-            "Erreur de sérialisation : %s", serializer.errors
-        )  # Ajoutez cette ligne pour afficher les erreurs
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+#     def post(self, request):
+#         serializer = self.serializer_class(data=request.data)
+#         if serializer.is_valid():
+#             user = serializer.validated_data["user"]
+#             # À ce stade, vous pouvez générer un token JWT, un token DRF ou utiliser une autre méthode d'authentification.
+#             # Ici, nous renvoyons simplement l'email de l'utilisateur comme exemple.
+#             return Response({"email": user.email}, status=status.HTTP_200_OK)
+
+#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
