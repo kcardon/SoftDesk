@@ -45,6 +45,14 @@ class ProjectAPIView(ModelViewSet):
         self.check_object_permissions(self.request, obj)
         return obj
 
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        instance.delete()
+        response_data = {
+            "message": "Project has been deleted",
+        }
+        return Response(response_data, status=status.HTTP_204_NO_CONTENT)
+
 
 class ProjectUsersAPIView(ModelViewSet):
     serializer_class = ContributorSerializer
@@ -54,6 +62,19 @@ class ProjectUsersAPIView(ModelViewSet):
         project_id = self.kwargs["project_id"]
         return Contributor.objects.filter(project_id=project_id)
 
+    def get_object(self):
+        obj = get_object_or_404(self.get_queryset(), pk=self.kwargs["pk"])
+        self.check_object_permissions(self.request, obj)
+        return obj
+
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        instance.delete()
+        response_data = {
+            "message": "Contributor has been deleted",
+        }
+        return Response(response_data, status=status.HTTP_204_NO_CONTENT)
+
 
 class ProjectIssuesAPIView(ModelViewSet):
     serializer_class = IssueSerializer
@@ -62,6 +83,19 @@ class ProjectIssuesAPIView(ModelViewSet):
     def get_queryset(self):
         project_id = self.kwargs["project_id"]
         return Issue.objects.filter(project_id=project_id)
+
+    def get_object(self):
+        obj = get_object_or_404(self.get_queryset(), pk=self.kwargs["pk"])
+        self.check_object_permissions(self.request, obj)
+        return obj
+
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        instance.delete()
+        response_data = {
+            "message": "Issue has been deleted",
+        }
+        return Response(response_data, status=status.HTTP_204_NO_CONTENT)
 
 
 class CommentAPIView(ModelViewSet):
@@ -73,10 +107,15 @@ class CommentAPIView(ModelViewSet):
         issue_id = self.kwargs["issue_id"]
         return Comment.objects.all()
 
+    def get_object(self):
+        obj = get_object_or_404(self.get_queryset(), pk=self.kwargs["pk"])
+        self.check_object_permissions(self.request, obj)
+        return obj
 
-"""     def post(self, request):
-        serializer = CommentSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST) """
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        instance.delete()
+        response_data = {
+            "message": "Comment has been deleted",
+        }
+        return Response(response_data, status=status.HTTP_204_NO_CONTENT)

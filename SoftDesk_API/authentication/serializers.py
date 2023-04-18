@@ -40,20 +40,18 @@ class SignUpSerializer(ModelSerializer):
         return user
 
 
-# class LoginSerializer(Serializer):
-#     email = EmailField()
-#     password = CharField(write_only=True)
+class LoginSerializer(Serializer):
+    email = EmailField()
+    password = CharField(write_only=True)
 
-#     def validate(self, data):
-#         email = data.get("email")
-#         password = data.get("password")
-#         logger.debug(f"Email: {email}")
-#         logger.debug(f"Password: {password}")
-#         user = authenticate(email=email, password=password)
-#         logger.debug(f"Authenticated user: {user}")
-
-#         if user is None:
-#             raise ValidationError("A user with this email and password is not found.")
-
-#         data["user"] = user
-#         return data
+    def validate(self, data):
+        email = data.get("email")
+        password = data.get("password")
+        print(f"Email: {email}")
+        print(f"Password: {password}")
+        user = authenticate(username=email, password=password)
+        print(f"Authenticated user: {user}")
+        if user is None:
+            raise ValidationError("A user with this email and password is not found.")
+        data["user"] = user
+        return data

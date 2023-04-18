@@ -18,11 +18,11 @@ class UserSerializer(ModelSerializer):
 
 
 class ProjectSerializer(ModelSerializer):
-    author_user_id = PrimaryKeyRelatedField(queryset=User.objects.all())
+    author_user = PrimaryKeyRelatedField(queryset=User.objects.all())
 
     class Meta:
         model = Project
-        fields = ["id", "title", "description", "type", "author_user_id"]
+        fields = ["id", "title", "description", "type", "author_user"]
 
 
 class ContributorSerializer(ModelSerializer):

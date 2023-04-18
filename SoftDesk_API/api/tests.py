@@ -23,7 +23,6 @@ class TestUser(APITestCase):
 
         # On réalise l’appel en GET en utilisant le client de la classe de test
         response = self.client.get(self.url)
-        print(response.json()["results"])
         # Nous vérifions que le status code est bien 200
         # et que les valeurs retournées sont bien celles attendues
         self.assertEqual(response.status_code, 200)
@@ -36,6 +35,9 @@ class TestUser(APITestCase):
                 "email": user.email,
             }
         ]
+        print(response.json()["results"])
+        print(excepted)
+
         self.assertEqual(excepted, response.json()["results"])
 
 

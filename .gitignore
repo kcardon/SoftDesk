@@ -1,1 +1,10 @@
 env/
+SoftDesk_API/api/__pycache__/models.cpython-39.pyc
+SoftDesk_API/api/__pycache__/permissions.cpython-39.pyc
+SoftDesk_API/api/__pycache__/serializers.cpython-39.pyc
+SoftDesk_API/api/__pycache__/views.cpython-39.pyc
+SoftDesk_API/api/migrations/0004_rename_author_user_id_project_author_user.py
+SoftDesk_API/api/migrations/__pycache__/0004_rename_author_user_id_project_author_user.cpython-39.pyc
+SoftDesk_API/authentication/__pycache__/serializers.cpython-39.pyc
+SoftDesk_API/authentication/__pycache__/views.cpython-39.pyc
+SoftDesk_API/SoftDesk_API/__pycache__/urls.cpython-39.pyc

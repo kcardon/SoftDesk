@@ -12,7 +12,7 @@ from api.views import (
 from authentication.views import (
     UserAPIView,
     SignupAPIView,
-    # LoginAPIView,
+    LoginAPIView,
 )
 
 
@@ -38,9 +38,9 @@ urlpatterns = [
     path("api/token/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
     path("api/token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
     # path("api/", include(router.urls)),
-    # path(
-    #    "api/login/", LoginAPIView.as_view(), name="login"
-    # ),  # Ajoutez cette ligne pour le Login
+    path(
+        "api/login/", LoginAPIView.as_view(), name="login"
+    ),  # Ajoutez cette ligne pour le Login
 ]
 
 # Création du routeur
@@ -50,16 +50,15 @@ router_root = routers.DefaultRouter()
 router_root.register("signup", SignupAPIView, basename="users")
 router_root.register("user", UserAPIView, basename="user")
 router_root.register("projects", ProjectAPIView, basename="projects")
+urlpatterns += [path("api/", include(router_root.urls))]
 
 router_project = routers.DefaultRouter()
 router_project.register("users", ProjectUsersAPIView, basename="projet_users")
 router_project.register("issues", ProjectIssuesAPIView, basename="projet_users")
+urlpatterns += [path("api/projects/<int:project_id>/", include(router_project.urls))]
 
 router_issue = routers.DefaultRouter()
 router_issue.register("comments", CommentAPIView, basename="comments")
-
-urlpatterns += [path("api/", include(router_root.urls))]
-urlpatterns += [path("api/projects/<int:project_id>/", include(router_project.urls))]
 urlpatterns += [
     path(
         "api/projects/<int:project_id>/issues/<int:issue_id>/",

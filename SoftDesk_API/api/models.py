@@ -9,7 +9,7 @@ class Project(models.Model):
     title = models.CharField(max_length=128)
     description = models.TextField(max_length=8192)
     type = models.CharField(max_length=128)
-    author_user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    author_user = models.ForeignKey(User, on_delete=models.CASCADE)
 
 
 class Contributor(models.Model):
@@ -45,6 +45,8 @@ class Issue(models.Model):
 
 class Comment(models.Model):
     description = models.TextField(max_length=8192)
-    author_user = models.ForeignKey(User, on_delete=models.CASCADE)
+    author_user = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name="comments_created"
+    )
     issue = models.ForeignKey(Issue, on_delete=models.CASCADE)
     created_time = models.DateTimeField(auto_now_add=True)

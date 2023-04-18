@@ -15,7 +15,7 @@ from .models import User
 from .serializers import (
     UserSerializer,
     SignUpSerializer,
-    # LoginSerializer,
+    LoginSerializer,
 )
 
 import logging
@@ -45,16 +45,16 @@ class SignupAPIView(ModelViewSet):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-# class LoginAPIView(APIView):
-#     serializer_class = LoginSerializer
-#     permission_classes = (AllowAny,)
+class LoginAPIView(APIView):
+    serializer_class = LoginSerializer
+    permission_classes = (AllowAny,)
 
-#     def post(self, request):
-#         serializer = self.serializer_class(data=request.data)
-#         if serializer.is_valid():
-#             user = serializer.validated_data["user"]
-#             # À ce stade, vous pouvez générer un token JWT, un token DRF ou utiliser une autre méthode d'authentification.
-#             # Ici, nous renvoyons simplement l'email de l'utilisateur comme exemple.
-#             return Response({"email": user.email}, status=status.HTTP_200_OK)
+    def post(self, request):
+        serializer = self.serializer_class(data=request.data)
+        if serializer.is_valid():
+            user = serializer.validated_data["user"]
+            # À ce stade, vous pouvez générer un token JWT, un token DRF ou utiliser une autre méthode d'authentification.
+            # Ici, nous renvoyons simplement l'email de l'utilisateur comme exemple.
+            return Response({"email": user.email}, status=status.HTTP_200_OK)
 
-#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
