@@ -23,11 +23,12 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-# Create your views here.
 class UserAPIView(ModelViewSet):
     permission_classes = (IsAuthenticated,)
     serializer_class = UserSerializer
-    queryset = get_user_model().objects.all()
+
+    def get_queryset(self):
+        return User.objects.all()
 
 
 class SignupAPIView(ModelViewSet):
@@ -53,8 +54,6 @@ class LoginAPIView(APIView):
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
             user = serializer.validated_data["user"]
-            # À ce stade, vous pouvez générer un token JWT, un token DRF ou utiliser une autre méthode d'authentification.
-            # Ici, nous renvoyons simplement l'email de l'utilisateur comme exemple.
             return Response({"email": user.email}, status=status.HTTP_200_OK)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
