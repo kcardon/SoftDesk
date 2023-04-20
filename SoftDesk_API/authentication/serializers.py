@@ -5,7 +5,7 @@ from rest_framework.serializers import (
     EmailField,
     CharField,
 )
-from django.contrib.auth import authenticate, get_user_model
+from django.contrib.auth import authenticate
 from .models import User
 import logging
 

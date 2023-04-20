@@ -1,39 +1,25 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import get_object_or_404
 
 # Create your views here.
 from rest_framework import status
 from rest_framework.response import Response
-from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
-from rest_framework.permissions import AllowAny
 
 from .permissions import IsContributor
-from .models import User, Project, Contributor, Issue, Comment
+from .models import Project, Contributor, Issue, Comment
 from .serializers import (
-    UserSerializer,
     ProjectSerializer,
     ContributorSerializer,
     IssueSerializer,
     CommentSerializer,
 )
-from rest_framework.permissions import AllowAny, IsAuthenticated
-
-
-class UserAPIView(ModelViewSet):
-    serializer_class = UserSerializer
-
-    def get_queryset(self):
-        return User.objects.all()
-
-    """ def post(self, request):
-        serializer = UserSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST) """
 
 
 class ProjectAPIView(ModelViewSet):
+    """return a list of projects
+    access to a specific project is enabled for author or contributors only
+    updating or deleting a specific project is enabled for author only"""
+
     serializer_class = ProjectSerializer
     permission_classes = (IsContributor,)
 
@@ -55,6 +41,10 @@ class ProjectAPIView(ModelViewSet):
 
 
 class ProjectUsersAPIView(ModelViewSet):
+    """return the list of contributors to a specific project
+    adding a new contributor is enabled for author and contributors to the project
+    deleting a contributor is enabled for author of the contributor only"""
+
     serializer_class = ContributorSerializer
     permission_classes = (IsContributor,)
 
@@ -77,6 +67,10 @@ class ProjectUsersAPIView(ModelViewSet):
 
 
 class ProjectIssuesAPIView(ModelViewSet):
+    """return the list of issues related to a specific project
+    access to the list is limited to author and contributors to the project
+    updating and deleting a specific issue is enabled for its author only"""
+
     serializer_class = IssueSerializer
     permission_classes = (IsContributor,)
 
@@ -99,12 +93,14 @@ class ProjectIssuesAPIView(ModelViewSet):
 
 
 class CommentAPIView(ModelViewSet):
+    """return a list of comments related to a specific issue
+    access to this list is limited to the author and the contributors to the project
+    updating and deleting a comment is enabled for its author only"""
+
     serializer_class = CommentSerializer
     permission_classes = (IsContributor,)
 
     def get_queryset(self):
-        project_id = self.kwargs["project_id"]
-        issue_id = self.kwargs["issue_id"]
         return Comment.objects.all()
 
     def get_object(self):

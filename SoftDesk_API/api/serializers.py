@@ -1,14 +1,8 @@
 from rest_framework.serializers import (
-    Serializer,
     ModelSerializer,
-    ValidationError,
-    EmailField,
-    CharField,
     PrimaryKeyRelatedField,
 )
-from django.contrib.auth import authenticate
 from .models import User, Project, Contributor, Issue, Comment
-import logging
 
 
 class UserSerializer(ModelSerializer):

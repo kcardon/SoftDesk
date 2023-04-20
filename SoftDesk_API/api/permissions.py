@@ -4,6 +4,13 @@ from rest_framework.permissions import SAFE_METHODS
 
 
 class IsContributor(BasePermission):
+    """general permission allow any authenticated user to access to the get methods
+    object permission :
+    - safe methods applied to a specific object are enabled for their author or any contributor to the root project
+    - other methods applied to this specific object (as updating and deleting the object)
+    are enabled for their author only.
+    """
+
     def has_permission(self, request, view):
         return bool(request.user and request.user.is_authenticated)
 
