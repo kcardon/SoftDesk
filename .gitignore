@@ -22,3 +22,11 @@ SoftDesk_API/flake-report/back.svg
 SoftDesk_API/flake-report/file.svg
 SoftDesk_API/flake-report/index.html
 SoftDesk_API/flake-report/styles.css
+SoftDesk_API/authentication/__pycache__/admin.cpython-39.pyc
+SoftDesk_API/authentication/__pycache__/models.cpython-39.pyc
+SoftDesk_API/authentication/__pycache__/serializers.cpython-39.pyc
+SoftDesk_API/authentication/__pycache__/views.cpython-39.pyc
+SoftDesk_API/db.sqlite3
+SoftDesk_API/api/__pycache__/admin.cpython-39.pyc
+SoftDesk_API/api/__pycache__/permissions.cpython-39.pyc
+SoftDesk_API/api/__pycache__/views.cpython-39.pyc
