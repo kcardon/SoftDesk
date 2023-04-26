@@ -5,7 +5,12 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
-from .permissions import IsContributor
+from .permissions import (
+    ProjectPermission,
+    ProjectUserPermission,
+    IssuePermission,
+    CommentPermission,
+)
 from .models import Project, Contributor, Issue, Comment
 from .serializers import (
     ProjectSerializer,
@@ -21,7 +26,7 @@ class ProjectAPIView(ModelViewSet):
     updating or deleting a specific project is enabled for author only"""
 
     serializer_class = ProjectSerializer
-    permission_classes = (IsContributor,)
+    permission_classes = (ProjectPermission,)
 
     def get_queryset(self):
         return Project.objects.all()
@@ -46,7 +51,7 @@ class ProjectUsersAPIView(ModelViewSet):
     deleting a contributor is enabled for author of the contributor only"""
 
     serializer_class = ContributorSerializer
-    permission_classes = (IsContributor,)
+    permission_classes = (ProjectUserPermission,)
 
     def get_queryset(self):
         project_id = self.kwargs["project_id"]
@@ -72,7 +77,7 @@ class ProjectIssuesAPIView(ModelViewSet):
     updating and deleting a specific issue is enabled for its author only"""
 
     serializer_class = IssueSerializer
-    permission_classes = (IsContributor,)
+    permission_classes = (IssuePermission,)
 
     def get_queryset(self):
         project_id = self.kwargs["project_id"]
@@ -98,7 +103,7 @@ class CommentAPIView(ModelViewSet):
     updating and deleting a comment is enabled for its author only"""
 
     serializer_class = CommentSerializer
-    permission_classes = (IsContributor,)
+    permission_classes = (CommentPermission,)
 
     def get_queryset(self):
         return Comment.objects.all()
